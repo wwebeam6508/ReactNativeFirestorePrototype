@@ -1,24 +1,22 @@
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+// import { StatusBar } from 'expo-status-bar'
+import { StyleSheet, Text, View, StatusBar } from 'react-native'
 import { initializeApp } from 'firebase/app'
 import { firebaseConfig } from './src/firebaseConfig'
-console.log(firebaseConfig)
+import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context'
+import Main from './src/main'
 initializeApp(firebaseConfig)
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <Main/>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
-
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
+      flex: 1
+  }
 })

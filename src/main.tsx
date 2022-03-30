@@ -1,10 +1,10 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { NavigationContainer } from "@react-navigation/native"
+
 import React from "react"
 import ChatTab from "./Tabs/chatTab"
 import ListTab from "./Tabs/listTab"
 import MapTab from "./Tabs/mapTab"
-
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
+import { NavigationContainer } from "@react-navigation/native"
 const Tab = createBottomTabNavigator()
 
 export default function Main(){
