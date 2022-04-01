@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "218173803670",
+    "firebase_url": "https://meincall-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "meincall",
+    "storage_bucket": "meincall.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:218173803670:android:73017a8c506294e96686b7",
+        "android_client_info": {
+          "package_name": "com.connectionerror.nakprad"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "218173803670-ht68nr0o5nuvs06ufm6aj7js0q06au19.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCCghNDK4bDjf59klAgt4-uliIN1DC-j3g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "218173803670-ht68nr0o5nuvs06ufm6aj7js0q06au19.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
