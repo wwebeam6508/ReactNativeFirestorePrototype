@@ -19,17 +19,17 @@ const store = configureStore({
 export default function App() {
   return (
     
-    <SafeAreaProvider >
-      <SafeAreaView style={styles.container}>
-        <ReduxProvider store={store}>
+      <ReduxProvider store={store}>
           <PaperProvider>
-            <Root>
-              <Main/>
-            </Root>
+            <SafeAreaProvider >
+              <SafeAreaView style={styles.container}>
+                    <Root>
+                      <Main/>
+                    </Root>
+              </SafeAreaView>
+            </SafeAreaProvider>
           </PaperProvider>
-        </ReduxProvider>
-      </SafeAreaView>
-    </SafeAreaProvider>
+      </ReduxProvider>
   )
 }
 const styles = StyleSheet.create({

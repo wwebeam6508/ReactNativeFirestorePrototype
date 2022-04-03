@@ -126,14 +126,6 @@ export default function SignIn() {
     }
 
     async function updateUserProfile(user:any){
-        // const db = getFirestore()
-        // const userRef = doc(db, "users", user.uid)
-        // const userData = await getDoc(doc(collection(db, "users"), user.uid))
-        // await setDoc(userRef, {
-        //     emailverified: user.emailVerified,
-        //     phonenumber: user.phoneNumber,
-        //     dateJoined: userData.data()?.dateJoined ? userData.data()?.dateJoined :  Timestamp.fromDate(new Date())
-        // }, { merge: true })
         const userData = await firestore().collection('users').doc(user.uid).get()
         
         firestore().collection('users').doc(user.uid)
@@ -213,6 +205,7 @@ export default function SignIn() {
                     <TextInput
                         style={styles.input}
                         autoComplete={false}
+                        label="OTP Number"
                         placeholder="OTP Number"
                         value={inputOtp}
                         onChangeText={text => setInputOTP(text)}
