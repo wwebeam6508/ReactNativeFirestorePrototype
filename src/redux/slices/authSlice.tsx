@@ -20,17 +20,17 @@ const initialState = {
 }
 
 export const updateUserAvatar = createAsyncThunk('updateUserAvatar',
-    async (file, store) =>{
+    async (file:any, store:any) =>{
         return await uploadImage(file, store.getState().auth.user.uid)
     }
 )
 
 export const updateUser = createAsyncThunk('updateUser',
-    async (userdetail, store) =>{
+    async (userdetail:Object, store:any) =>{
         const batch = firestore().batch()
         const userRef = firestore().collection('users').doc(store.getState().auth.user.uid)
         const userinfo = userdetail
-        batch.update(userRef, userinfo)
+        batch.update(userRef, userdetail)
         await batch.commit()
         return userinfo
     }
@@ -40,18 +40,18 @@ const authSlice = createSlice({
     name: 'auth',
     initialState,
     reducers:{
-        signIn: (state, action) =>{
+        signIn: (state:any, action) =>{
             state.user = action.payload
         },
-        signOutApp: (state) => {
+        signOutApp: (state:any) => {
             state.user = initialState
         }
     },
     extraReducers:{
-        [updateUserAvatar.fulfilled]: (state, action)=>{
+        [updateUserAvatar.fulfilled.toString()]: (state:any, action)=>{
             state.user = Object.assign(state.user , action.payload)
         },
-        [updateUser.fulfilled]: (state, action)=>{
+        [updateUser.fulfilled.toString()]: (state:any, action)=>{
             state.user = Object.assign(state.user , action.payload)
         }
     }
@@ -60,16 +60,15 @@ const authSlice = createSlice({
 function uploadImage(file, uid){
     return new Promise((resolve)=>{
         const storageRef = storage().ref(`usersAvatar/${uid}`)
-        storageRef.putString(file, 'data_url').then((snapshot) => {
-            snapshot.ref.getDownloadURL().then((downloadURL) => {
-                const batch = firestore().batch()
-                const userRef = firestore().collection('users').doc(uid)
-                const avatar = {avatar: downloadURL}
-                batch.update(userRef, avatar)
-                batch.commit()
-                resolve(avatar)
-            })
-        })   
+        storageRef.putString(file, storage.StringFormat.BASE64).then(async () => {
+            const downloadURL = await storage().ref(`usersAvatar/${uid}`).getDownloadURL()
+            const batch = firestore().batch()
+            const userRef = firestore().collection('users').doc(uid)
+            const avatar = {avatar: downloadURL}
+            batch.update(userRef, avatar)
+            batch.commit() 
+            resolve(avatar)
+        })  
     })
 }
 

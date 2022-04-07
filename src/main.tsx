@@ -4,7 +4,8 @@ import ChatTab from "./components/Tabs/chatTab"
 import ListTab from "./components/Tabs/listTab"
 import MapTab from "./components/Tabs/mapTab"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
-import { NavigationContainer } from "@react-navigation/native"
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import { NavigationContainer, StackActions  } from "@react-navigation/native"
 import SignIn from "./components/Login/signIn"
 import firebase from "@react-native-firebase/app"
 import { Platform } from "react-native"
@@ -15,9 +16,12 @@ import moment from "moment"
 import { useDispatch, useSelector } from "react-redux"
 import { getUser, signIn } from "./redux/slices/authSlice"
 import { Button, Avatar, TouchableRipple } from "react-native-paper"
-import { imagesex } from "./ultis/imagesex"
-
+import imagesex from "./ultis/imagesex"
+import Setting from "./components/Profile/profile"
+import { StatusBar } from "expo-status-bar"
+import { useNavigation } from '@react-navigation/native'
 const Tab = createBottomTabNavigator()
+const Stack = createNativeStackNavigator()
 
 const credentials = Platform.select({
     android: firebaseConfig,
@@ -30,8 +34,6 @@ const config = {
 
 
 export default function Main(){
-    
-    const user_detail = useSelector(getUser)
     
     const dispatch = useDispatch()
     const [initializing, setInitializing] = useState(true)
@@ -69,12 +71,40 @@ export default function Main(){
     
     if (initializing) return null
 
+
+    return(
+        <>
+            {
+                isLoggedIn ? 
+                <>
+                    <StatusBar
+                    />
+                    <NavigationContainer>
+                        <Stack.Navigator 
+                            initialRouteName="BottomTabScreen"
+                        >
+                            <Stack.Screen options={{ headerShown: false }} name="BottomTabScreen" component={BottomTabScreen} />
+                            <Stack.Screen options={{ headerShown: false }} name="Setting" component={Setting} />
+                        </Stack.Navigator>
+                    </NavigationContainer>
+                </>
+                :
+                    <SignIn/>
+            }
+        </>
+        
+    )
+}
+
+function BottomTabScreen() {
+    const navigation = useNavigation()
+    const user_detail:any = useSelector(getUser)
     const headerBar = {
         title: "",
         headerLeft: ()=> (
             <TouchableRipple
-                style={{marginLeft:10}}
-                onPress={() => console.log('Pressed')}
+                style={{marginLeft:15,marginBottom:25}}
+                onPress={() => navigation.dispatch(StackActions.replace('Setting'))}
                 rippleColor="rgba(0, 0, 0, 1)"
             >
                 <Avatar.Image size={46} source={user_detail.avatar ? { uri:user_detail.avatar } : imagesex(user_detail.sex)} />
@@ -82,27 +112,16 @@ export default function Main(){
         ),
         headerRight: ()=> <Button mode="contained">Notfication</Button>
     }
-
     return(
-        <>
-            {
-                isLoggedIn ? 
-                    <NavigationContainer>
-                        <Tab.Navigator
-                            screenOptions={headerBar}
-                        >
-                            <Tab.Screen 
-                                name="Map" component={MapTab} />
-                            <Tab.Screen 
-                                name="List" component={ListTab} />
-                            <Tab.Screen 
-                                name="Chat" component={ChatTab} />
-                        </Tab.Navigator>
-                    </NavigationContainer>
-                :
-                    <SignIn/>
-            }
-        </>
-        
+        <Tab.Navigator
+            screenOptions={headerBar}
+        >
+            <Tab.Screen 
+                name="Map" component={MapTab} />
+            <Tab.Screen 
+                name="List" component={ListTab} />
+            <Tab.Screen 
+                name="Chat" component={ChatTab} />
+        </Tab.Navigator>
     )
 }

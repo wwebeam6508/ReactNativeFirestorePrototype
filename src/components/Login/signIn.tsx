@@ -156,13 +156,11 @@ export default function SignIn() {
         <View style={styles.container}>
             {
                 spinner && 
-                <>
-                        <Spinner
+                <Spinner
                         visible={true}
                         textContent={'Loading...'}
                         textStyle={styles.spinnerTextStyle}
-                    />
-                </>
+                />
             }
             
             <Recaptcha

@@ -23,9 +23,9 @@ export default function App() {
           <PaperProvider>
             <SafeAreaProvider >
               <SafeAreaView style={styles.container}>
-                    <Root>
-                      <Main/>
-                    </Root>
+                <Root>
+                  <Main/>
+                </Root>
               </SafeAreaView>
             </SafeAreaProvider>
           </PaperProvider>
