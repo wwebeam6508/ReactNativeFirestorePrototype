@@ -361,10 +361,10 @@ export default function Profile() {
                 }
                 {
                     <View style={styles.inputform}>
-                        <Text>Email Verified : {user_detail.emailVerified ? 
-                            <Ionicons style={{fontWeight:"bold"}} name="checkmark" size={15} color="green" />
+                        <Text>Email Verified :  {user_detail.emailVerified ? 
+                            <Ionicons style={{fontWeight:"bold"}} name="checkmark-circle" size={15} color="green" />
                             : 
-                            <Ionicons style={{fontWeight:"bold"}} name="close" size={15} color="red" />}
+                            <Ionicons style={{fontWeight:"bold"}} name="close-circle" size={15} color="red" />}
                         </Text>
                     </View>
                 }
@@ -379,7 +379,8 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 30
     },
-    inputform:{             
+    inputform:{  
+        marginTop: 5,           
         flexWrap: 'wrap', 
         alignItems: 'flex-start',
         flexDirection:'row'},
