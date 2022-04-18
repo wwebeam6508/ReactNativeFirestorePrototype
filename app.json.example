@@ -20,10 +20,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "",
       "googleServicesFile": "./GoogleService-Info.plist",
-      "buildNumber": "1.0.0",
-      "config": {
-        "googleMapsApiKey": ""
-      }
+      "buildNumber": "1.0.0"
     },
     "android": {
       "package": "",
@@ -32,12 +29,7 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
       },
-      "versionCode": 1,
-      "config": {
-        "googleMaps": {
-          "apiKey":""
-        }
-      }
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"

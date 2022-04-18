@@ -27,6 +27,8 @@ import DatePicker from "react-native-date-picker"
 import Ionicons from '@expo/vector-icons/Ionicons'
 import Spinner from "react-native-loading-spinner-overlay/lib"
 import { ALERT_TYPE, Dialog, Toast } from "react-native-alert-notification"
+import MapboxGL from '@rnmapbox/maps'
+
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
 

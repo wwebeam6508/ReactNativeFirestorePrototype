@@ -25,6 +25,16 @@ buildscript {
 
 allprojects {
     repositories {
+// @generated begin @rnmapbox/maps-v2-maven - expo prebuild (DO NOT MODIFY) sync-cb5ce5d6dd5aff6f68a082fbcf1a84c114ee0ce9
+maven {
+      url 'https://api.mapbox.com/downloads/v2/releases/maven'
+      authentication { basic(BasicAuthentication) }
+      credentials {
+        username = 'mapbox'
+        password = project.properties['MAPBOX_DOWNLOADS_TOKEN'] ?: ""
+      }
+    }
+// @generated end @rnmapbox/maps-v2-maven
         mavenLocal()
         maven {
             // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
