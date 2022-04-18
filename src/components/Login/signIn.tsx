@@ -80,26 +80,17 @@ export default function SignIn() {
 
     async function confirmOTPCode() {
         if(inputOtp.trim().length > 0){
-            try {
-                if(confirm){
-                    setSpinner(true)
-                    await confirm.confirm(inputOtp).then(async (result:any)=>{
-                        await onSignInSubmit(result.user)
-                    }).catch((error)=>{
-                        setSpinner(false)
-                        Dialog.show({
-                            type: ALERT_TYPE.DANGER,
-                            title: 'Error',
-                            textBody: error,
-                        })
+            if(confirm){
+                setSpinner(true)
+                await confirm.confirm(inputOtp).then(async (result:any)=>{
+                    await onSignInSubmit(result.user)
+                }).catch((error)=>{
+                    setSpinner(false)
+                    Dialog.show({
+                        type: ALERT_TYPE.DANGER,
+                        title: 'Error',
+                        textBody: error,
                     })
-                }
-            } catch (error) {
-                setSpinner(false)
-                Dialog.show({
-                    type: ALERT_TYPE.DANGER,
-                    title: 'Error',
-                    textBody: 'รหัส OTP ไม่ถูกต้อง',
                 })
             }
         } else {
@@ -135,11 +126,6 @@ export default function SignIn() {
             dateJoined: userData.data()?.dateJoined ? userData.data()?.dateJoined :  firestore.FieldValue.serverTimestamp()
         })
         .then(() => {
-            Dialog.show({
-                type: ALERT_TYPE.SUCCESS,
-                title: 'Logined',
-                textBody: 'success',
-            })
             setSpinner(false)
         })
         .catch((error)=>{

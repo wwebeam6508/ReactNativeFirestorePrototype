@@ -19,7 +19,11 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.connectionerror.nakprad",
-      "googleServicesFile": "./GoogleService-Info.plist"
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "buildNumber": "1.0.0",
+      "config": {
+        "googleMapsApiKey": "AIzaSyDFxS_4GzZuUsgCFSLjR_Gxh0_EHDo1WAg"
+      }
     },
     "android": {
       "package": "com.connectionerror.nakprad",
@@ -27,6 +31,12 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
+      },
+      "versionCode": 1,
+      "config": {
+        "googleMaps": {
+          "apiKey":"AIzaSyCCghNDK4bDjf59klAgt4-uliIN1DC-j3g"
+        }
       }
     },
     "web": {
