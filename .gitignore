@@ -41,7 +41,7 @@ DerivedData
 *.ipa
 *.xcuserstate
 project.xcworkspace
-
+.env.d.ts
 # Android/IntelliJ
 #
 build/
