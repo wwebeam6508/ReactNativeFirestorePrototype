@@ -27,7 +27,8 @@ import DatePicker from "react-native-date-picker"
 import Ionicons from '@expo/vector-icons/Ionicons'
 import Spinner from "react-native-loading-spinner-overlay/lib"
 import { ALERT_TYPE, Dialog, Toast } from "react-native-alert-notification"
-import MapboxGL from '@rnmapbox/maps'
+import MapboxGL from "@rnmapbox/maps"
+import { REACT_APP_MAP_BOX_GL } from "@env"
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -43,7 +44,7 @@ const config = {
 
 
 export default function Main(){
-    
+    MapboxGL.setAccessToken(REACT_APP_MAP_BOX_GL)
     const user_detail:any = useSelector(getUser)
     const dispatch = useDispatch()
     const [initializing, setInitializing] = useState(true)
