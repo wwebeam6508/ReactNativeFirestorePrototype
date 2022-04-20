@@ -1,7 +1,7 @@
 
 import React, { useEffect, useState } from "react"
 import ChatTab from "./components/Tabs/chatTab"
-import ListTab from "./components/Tabs/listTab"
+import ListTab from "./components/Tabs/ListTab/listTab"
 import MapTab from "./components/Tabs/mapTab"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
@@ -45,7 +45,7 @@ const config = {
 
 export default function Main(){
     MapboxGL.setAccessToken(REACT_APP_MAP_BOX_GL)
-    const user_detail:any = useSelector(getUser)
+    const user_detail:userDetail = useSelector(getUser) as userDetail
     const dispatch = useDispatch()
     const [initializing, setInitializing] = useState(true)
     const [isLoggedIn, setisLoggedIn] = useState(false)
@@ -331,6 +331,7 @@ function BottomTabScreen() {
                 <Avatar.Image size={46} source={user_detail.avatar ? { uri:user_detail.avatar } : imagesex(user_detail.sex)} />
             </TouchableRipple>
         ),
+        tabBarActiveTintColor: '#e91e63',
         headerRight: ()=> <Button mode="contained">Notfication</Button>
     }
     return(
@@ -338,10 +339,25 @@ function BottomTabScreen() {
             screenOptions={headerBar}
         >
             <Tab.Screen 
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Ionicons name="map-outline" color={color} size={26} />
+                    )
+                }}
                 name="Map" component={MapTab} />
             <Tab.Screen 
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Ionicons name="list-outline" color={color} size={26} />
+                    )
+                }}
                 name="List" component={ListTab} />
             <Tab.Screen 
+                options={{
+                    tabBarIcon: ({ color }) => (
+                        <Ionicons name="chatbox-outline" color={color} size={26} />
+                    )
+                }}
                 name="Chat" component={ChatTab} />
         </Tab.Navigator>
     )

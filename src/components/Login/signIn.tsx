@@ -40,17 +40,16 @@ export default function SignIn() {
     async function onVerify() {
         setSpinner(true)
         auth().signInWithPhoneNumber(formattedValue)
-        .catch((error:any) => {
-            Dialog.show({
-                type: ALERT_TYPE.DANGER,
-                title: 'Error',
-                textBody: error,
-            })
-            setSpinner(false)
-        })
         .then((result:any)=>{
             setConfirm(result)
             setSpinner(false)
+        }).catch(e=>{
+            setSpinner(false)
+            Dialog.show({
+                type: ALERT_TYPE.DANGER,
+                title: 'Error',
+                textBody: e.message,
+            })
         })
     }
 

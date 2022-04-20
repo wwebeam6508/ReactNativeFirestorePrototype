@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "218173803670-pe60ll35heu5u0hcob7686hlidu7o9hi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.connectionerror.nakprad",
+            "certificate_hash": "468e3b81257ca5fd6f4704dbc0003a25c6967f21"
+          }
+        },
+        {
           "client_id": "218173803670-ht68nr0o5nuvs06ufm6aj7js0q06au19.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -30,6 +38,13 @@
             {
               "client_id": "218173803670-ht68nr0o5nuvs06ufm6aj7js0q06au19.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "218173803670-ig2e1usgg1omht17b4jlgr0r90eu886b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.connectionerror.nakprad"
+              }
             }
           ]
         }
