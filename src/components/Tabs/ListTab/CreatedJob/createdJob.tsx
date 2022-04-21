@@ -16,7 +16,7 @@ export function CreatedJob() {
 
     function getCreatedJobs(){
         const subscriber = getCreatedJobData(user_detail.uid).onSnapshot(onResultGetCreatedJobs, onError)
-        return subscriber()
+        return subscriber
     }
     function onResultGetCreatedJobs(querySnapshot) {
         
@@ -46,7 +46,7 @@ export function CreatedJob() {
                 {
                     createdJobs && createdJobs.map((job,idx)=>{
                         return(
-                            <Card key={idx} style={{borderColor:"#f064da",borderWidth:1}}>
+                            <Card key={idx} style={{borderColor:"#EEEDE7",borderWidth:1}}>
                                 <Card.Content>
                                     <View style={[{flexDirection:'row',justifyContent: 'space-between'}]}>
                                         <Title>{job.title}</Title>
