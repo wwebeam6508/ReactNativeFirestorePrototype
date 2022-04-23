@@ -9,7 +9,7 @@ import auth from '@react-native-firebase/auth'
 import { FirebaseAuthTypes } from "@react-native-firebase/auth"
 import Spinner from 'react-native-loading-spinner-overlay'
 import { useDispatch } from "react-redux"
-import { signIn } from "../../redux/slices/authSlice"
+import { signIn, signOutApp } from "../../redux/slices/authSlice"
 
 export default function SignIn() {
 
@@ -88,7 +88,7 @@ export default function SignIn() {
                     Dialog.show({
                         type: ALERT_TYPE.DANGER,
                         title: 'Error',
-                        textBody: error,
+                        textBody: error.message,
                     })
                 })
             }
@@ -118,23 +118,43 @@ export default function SignIn() {
     async function updateUserProfile(user:any){
         const userData = await firestore().collection('users').doc(user.uid).get()
         
-        firestore().collection('users').doc(user.uid)
-        .update({
-            emailverified: user.emailVerified,
-            phonenumber: user.phoneNumber,
-            dateJoined: userData.data()?.dateJoined ? userData.data()?.dateJoined :  firestore.FieldValue.serverTimestamp()
-        })
-        .then(() => {
-            setSpinner(false)
-        })
-        .catch((error)=>{
-            Dialog.show({
-                type: ALERT_TYPE.DANGER,
-                title: 'Error',
-                textBody: error,
+        if(userData.exists){
+            firestore().collection('users').doc(user.uid)
+            .update({
+                emailverified: user.emailVerified,
+                phonenumber: user.phoneNumber
             })
-            setSpinner(false)
-        })
+            .then(() => {
+                setSpinner(false)
+            })
+            .catch((error)=>{
+                Dialog.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: 'Error',
+                    textBody: error,
+                })
+                dispatch(signOutApp())
+                setSpinner(false)
+            })
+        } else {
+            firestore().collection('users').doc(user.uid)
+            .set({
+                emailverified: user.emailVerified,
+                phonenumber: user.phoneNumber
+            })
+            .then(() => {
+                setSpinner(false)
+            })
+            .catch((error)=>{
+                Dialog.show({
+                    type: ALERT_TYPE.DANGER,
+                    title: 'Error',
+                    textBody: error,
+                })
+                dispatch(signOutApp())
+                setSpinner(false)
+            })
+        }
     }
 
     return(

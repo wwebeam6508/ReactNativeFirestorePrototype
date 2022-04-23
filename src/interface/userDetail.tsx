@@ -13,5 +13,5 @@ interface userDetail {
     uid:String,
     detail:String,
     sex:String,
-    dateJoined:String
+    dateJoined:Object
 }

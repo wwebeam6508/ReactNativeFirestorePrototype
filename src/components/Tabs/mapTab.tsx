@@ -1,9 +1,11 @@
 import MapboxGL from "@rnmapbox/maps"
-import React from "react"
+import React, { useEffect } from "react"
 import { Button, StyleSheet, Text, View } from "react-native"
-import {  REACT_APP_MAP_BOX_GL } from "@env"
-
 export default function MapTab(){
+
+    useEffect(()=>{
+    },[])
+
 
     return(
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

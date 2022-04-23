@@ -8,6 +8,12 @@ export async function getJobsDetail(job_id) {
 
     let job_data =  (await firebase.firestore().collection("jobs").doc(job_id).get()).data()
     const user_data = await getUserDetail(job_data.uid)
+    job_data = {
+        dateCreated:job_data.dateCreated,
+        dateEnd:job_data.dateEnd,
+        dateStart:job_data.dateStart,
+        title:job_data.title,
+    }
     job_data.owner = user_data
     return job_data
 }

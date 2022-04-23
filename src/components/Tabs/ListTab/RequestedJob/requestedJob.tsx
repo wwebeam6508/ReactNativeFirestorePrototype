@@ -5,9 +5,12 @@ import { useSelector } from "react-redux"
 import { getUser } from "../../../../redux/slices/authSlice"
 import { getJobsDetail, getRequestedJobData } from "./requestedJobProvider"
 import moment from "moment"
-import { Card, Title } from "react-native-paper"
+import { Avatar, Card, Title } from "react-native-paper"
+import { StackActions, useNavigation } from "@react-navigation/native"
+import imagesex from "../../../../ultis/imagesex"
 
 export function RequestedJob() {
+    const navigation = useNavigation()
     const user_detail:userDetail = useSelector(getUser) as userDetail
     const [ requestedJobs, setRequestedJobs] = useState([])
 
@@ -26,10 +29,12 @@ export function RequestedJob() {
         
         let jobs = []
         querySnapshot.forEach(async (doc)=>{
-            jobs.push(doc.data())
+            const data = doc.data()
+            jobs.push(data)
         })
         for (let i of jobs) {
             const job_detail = await getJobsDetail(i.jobId)
+            
             i.job_detail = job_detail
             i.dateRequest = moment( new Date(i.dateRequest.seconds*1000)).format('DD/MM/YYYY hh:mm:ss')
             i.job_detail.dateCreated = moment( new Date(i.job_detail.dateCreated.seconds*1000)).format('DD/MM/YYYY hh:mm:ss')
@@ -52,10 +57,11 @@ export function RequestedJob() {
                 {
                     requestedJobs && requestedJobs.map((job,idx)=>{
                         return(
-                            <Card key={idx} style={{borderColor:"#EEEDE7",borderWidth:1}}>
+                            <Card key={idx} style={{borderColor:"#EEEDE7",borderWidth:1}} onPress={()=>{navigation.dispatch(StackActions.push("RequestedJobForm", job))}}>
                                 <Card.Content>
                                     <View style={[{flexDirection:'row',justifyContent: 'space-between'}]}>
                                         <Title>{job.job_detail.title}</Title>
+                                        <Avatar.Image size={55} source={job.job_detail.owner.avatar ? { uri:job.job_detail.owner.avatar } : imagesex(job.job_detail.owner.sex)} />
                                     </View>
                                     <View style={[{flexDirection:'row',justifyContent: 'space-between'}]}>
                                         <View >

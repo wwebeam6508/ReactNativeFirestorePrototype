@@ -22,7 +22,16 @@ export function CreatedJob() {
         
         let jobs = []
         querySnapshot.forEach(doc => {
-            jobs.push(doc.data())
+            const jobData = doc.data()
+            jobs.push({
+                dateCreated: jobData.dateCreated,
+                dateEnd: jobData.dateEnd,
+                dateStart: jobData.dateStart,
+                isNoti: jobData.isNoti,
+                title: jobData.title,
+                jobId: jobData.jobId
+
+            })
             jobs[jobs.length - 1].jobId = doc.id
         })
         for (let i of jobs) {
@@ -46,13 +55,13 @@ export function CreatedJob() {
                 {
                     createdJobs && createdJobs.map((job,idx)=>{
                         return(
-                            <Card key={idx} style={{borderColor:"#EEEDE7",borderWidth:1}}>
+                            <Card key={idx} style={{borderColor:"#EEEDE7" ,borderWidth:1}}>
                                 <Card.Content>
-                                    <View style={[{flexDirection:'row',justifyContent: 'space-between'}]}>
+                                    <View style={[{flexDirection:'row', justifyContent: 'space-between'}]}>
                                         <Title>{job.title}</Title>
                                         { job.isNoti && <Ionicons name="alert-outline" color={"red"} size={20} ></Ionicons>}
                                     </View>
-                                    <View style={[{flexDirection:'row',justifyContent: 'space-between'}]}>
+                                    <View style={[{flexDirection:'row', justifyContent: 'space-between'}]}>
                                         <View >
                                             <Text >เริ่ม {job.dateStart}</Text>
                                             <Text >สิ้นสุด {job.dateEnd}</Text>

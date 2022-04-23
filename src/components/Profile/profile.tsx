@@ -171,13 +171,15 @@ export default function Profile() {
                 />
             }
             <ScrollView>
-                <TouchableRipple
-                    style={{marginLeft:15,marginTop:15,width:55}}
-                    onPress={() => navigation.dispatch(StackActions.replace('BottomTabScreen'))}
-                    rippleColor="rgba(0, 0, 0, 1)"
-                >
-                    <Ionicons style={{textAlign:"center"}} name="arrow-back" size={32} color="black" />
-                </TouchableRipple>
+                <View style={{backgroundColor:"white"}}> 
+                    <TouchableRipple
+                        style={{marginLeft:15,marginTop:15,paddingBottom:15,width:55}}
+                        onPress={() => navigation.dispatch(StackActions.replace('BottomTabScreen'))}
+                        rippleColor="rgba(0, 0, 0, 1)"
+                    >
+                        <Ionicons style={{textAlign:"center"}} name="arrow-back" size={32} color="black" />
+                    </TouchableRipple>
+                </View>
                 <TouchableRipple
                     style={styles.content} 
                     onPress={() => {uploadAvatar()}}
@@ -623,7 +625,7 @@ export default function Profile() {
                         mode="contained"
                         style={{marginTop: 20, marginBottom: 20}}
                         contentStyle={{
-                            backgroundColor: "orange",
+                            backgroundColor: "red",
                             height: 50,
                             width: 300
                         }}
@@ -647,8 +649,9 @@ const styles = StyleSheet.create({
         marginTop: 5,           
         flexWrap: 'wrap', 
         alignItems: 'flex-start',
-        flexDirection:'row'},
-        spinnerTextStyle: {
+        flexDirection:'row'
+    },
+    spinnerTextStyle: {
         color: '#FFF'
     },
     content: {

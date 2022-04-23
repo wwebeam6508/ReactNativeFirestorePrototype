@@ -5,21 +5,20 @@ import ListTab from "./components/Tabs/ListTab/listTab"
 import MapTab from "./components/Tabs/mapTab"
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs"
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { NavigationContainer, StackActions  } from "@react-navigation/native"
+import { NavigationContainer, StackActions, useNavigation } from "@react-navigation/native"
 import SignIn from "./components/Login/signIn"
 import firebase from "@react-native-firebase/app"
-import { Platform, ScrollView, StyleSheet, View } from "react-native"
+import { PermissionsAndroid, Platform, ScrollView, StyleSheet, View } from "react-native"
 import { firebaseConfig } from "./firebaseConfig"
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import moment from "moment"
 import { useDispatch, useSelector } from "react-redux"
-import { getUser, signIn, updateUser } from "./redux/slices/authSlice"
-import { Button, Avatar, TouchableRipple, TextInput, Text } from "react-native-paper"
+import { getUser, signIn, signOutApp, updateUser } from "./redux/slices/authSlice"
+import { Button, Avatar, TouchableRipple, TextInput, Text, Title } from "react-native-paper"
 import imagesex from "./ultis/imagesex"
 import Setting from "./components/Profile/profile"
 import { StatusBar } from "expo-status-bar"
-import { useNavigation } from '@react-navigation/native'
 import isEmpty from "./ultis/isEmpty"
 import DropDown from "react-native-paper-dropdown"
 import genderList from "../src/ultis/genderList.json"
@@ -29,6 +28,11 @@ import Spinner from "react-native-loading-spinner-overlay/lib"
 import { ALERT_TYPE, Dialog, Toast } from "react-native-alert-notification"
 import MapboxGL from "@rnmapbox/maps"
 import { REACT_APP_MAP_BOX_GL } from "@env"
+import Geolocation from 'react-native-geolocation-service'
+import { RequestedJobForm } from "./components/Tabs/ListTab/RequestedJob/requestedJobForm/requestedJobForm"
+import { MapPicker } from "./components/Tabs/ListTab/RequestedJob/requestedJobForm/mapPicker"
+import { getApplication } from "./redux/slices/userSlice"
+import { changeGeoActive } from "./redux/slices/userSlice"
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -46,31 +50,69 @@ const config = {
 export default function Main(){
     MapboxGL.setAccessToken(REACT_APP_MAP_BOX_GL)
     const user_detail:userDetail = useSelector(getUser) as userDetail
+    const user_application:any = useSelector(getApplication)
     const dispatch = useDispatch()
     const [initializing, setInitializing] = useState(true)
     const [isLoggedIn, setisLoggedIn] = useState(false)
     const [ formInfo, setFormInfo ] = useState<any>({})
     const [ showGenderDropDown, setShowGenderDropDown] = useState(false)
     const [ formConditionbirthday, setFormConditionbirthday] = useState(false)
-    const [spinner, setSpinner] = useState(false)
+    const [ spinner, setSpinner] = useState(false)
     useEffect(() => {
         async function init() {
             if (!firebase.apps.length) {
                 await firebase.initializeApp(credentials , config)
              }
+             await requestLocationPermission()
              const subscriber = auth().onAuthStateChanged(await onAuthStateChanged)
              return subscriber // unsubscribe on unmount
         }
         init()
     }, [])
+    
+    async function requestLocationPermission() 
+    {
+        if (Platform.OS === 'ios') {
+            const auth = await Geolocation.requestAuthorization("whenInUse")
+            if(auth === "granted") {
+                dispatch(changeGeoActive(true))
+            } else {
+                dispatch(changeGeoActive(false))
+            }
+          }
+        if(Platform.OS === 'android') {
+            const granted = await PermissionsAndroid.check( PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION )
+            if (granted) {
+                dispatch(changeGeoActive(true))
+            } 
+            else {
+                try {
+                    const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+                    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+                        dispatch(changeGeoActive(true))
+                    } else {
+                        dispatch(changeGeoActive(false))
+                    }
+                } catch (err) {
+                    console.warn(err)
+                    dispatch(changeGeoActive(false))
+                }
+            }
+        }
+    }
 
     async function onAuthStateChanged(user) {
+        dispatch(signOutApp())
         if (user) {
             const user_doc = await firestore().collection('users').doc(user.uid).get()
             const user_data = user_doc.data()
-            let user_detail = user_data
-            user_detail.dateJoined = moment( new Date(user_detail.dateJoined.seconds*1000)).format('DD/MM/YYYY hh:mm:ss')
-            user_detail = Object.assign(user_detail, {birthday:user_data.birthday ? user_data.birthday : Date.parse(user_data.birthday) || 0})
+            let user_detail = user_data ? user_data : {}
+            if(user_detail.dateJoined){
+                user_detail.dateJoined = moment( new Date(user_detail.dateJoined.seconds*1000)).format('DD/MM/YYYY hh:mm:ss')
+            }
+            if(user_data.birthday){
+                user_detail = Object.assign(user_detail, {birthday:user_data.birthday ? user_data.birthday : Date.parse(user_data.birthday) || 0})
+            }
             user_detail = Object.assign(user_detail, {
                 accessToken:user.accessToken,
                 emailVerified:user.emailVerified,
@@ -128,7 +170,15 @@ export default function Main(){
             firebase.auth().currentUser.updateProfile({
                 displayName: `${formInfo.firstname ? formInfo.firstname : user_detail.firstname} ${formInfo.lastname ? formInfo.lastname : user_detail.lastname}`
             }).then(async ()=>{
-                await dispatch(updateUser(userinfo))
+                const userForm = {
+                    firstname: formInfo.firstname,
+                    lastname: formInfo.lastname,
+                    sex: formInfo.sex,
+                    birthday: formInfo.birthday
+                }
+                firestore().collection('users').doc(`${user_detail.uid}`).set({...userForm,
+                    dateJoined:firestore.FieldValue.serverTimestamp()})
+                await dispatch(updateUser(userForm))
                 setSpinner(false)
                 Toast.show({
                     type: ALERT_TYPE.SUCCESS,
@@ -264,18 +314,91 @@ export default function Main(){
                                                 Save
                                             </Button> 
                                         </View>
+                                        <View style={styles.signoutform}>
+                                            <Button
+                                                onPress={()=>{
+                                                    firebase.auth().signOut().then(()=>{
+                                                        dispatch(signOutApp())
+                                                        setSpinner(false)
+                                                    }).catch((error)=>{
+                                                        Toast.show({
+                                                            type: ALERT_TYPE.DANGER,
+                                                            title: 'Error',
+                                                            textBody: error,
+                                                        })
+                                                        setSpinner(false)
+                                                    })
+                                                }}
+                                                mode="contained"
+                                                style={{marginTop: 20, marginBottom: 20}}
+                                                contentStyle={{
+                                                    backgroundColor: "red",
+                                                    height: 50,
+                                                    width: 300
+                                                }}
+                                            >
+                                                Logout
+                                            </Button> 
+                                        </View>
                                     </View>
                                 </ScrollView>
                             </View>
                         :
-                        <NavigationContainer>
-                            <Stack.Navigator 
-                                initialRouteName="BottomTabScreen"
-                            >
-                                <Stack.Screen options={{ headerShown: false }} name="BottomTabScreen" component={BottomTabScreen} />
-                                <Stack.Screen options={{ headerShown: false }} name="Setting" component={Setting} />
-                            </Stack.Navigator>
-                        </NavigationContainer>
+                        <>
+                            {
+                                user_application.isGeoActive ?
+                                <NavigationContainer>
+                                    <Stack.Navigator 
+                                        initialRouteName="BottomTabScreen"
+                                    >
+                                        <Stack.Screen options={{ headerShown: false }} name="BottomTabScreen" component={BottomTabScreen} />
+                                        <Stack.Screen options={{ headerShown: false }} name="Setting" component={Setting} />
+                                        <Stack.Screen options={{ headerShown: false }} name="RequestedJobForm" component={RequestedJobForm} />
+                                        <Stack.Screen options={{ headerShown: false }} name="MapPicker" component={MapPicker} />
+                                    </Stack.Navigator>
+                                </NavigationContainer>
+                                :
+                                <View style={{
+                                    position: 'absolute', 
+                                    top: 0, left: 0, 
+                                    right: 0, bottom: 0, 
+                                    justifyContent: 'center', 
+                                    alignItems: 'center'}}>
+                                    <Title>
+                                        กรุณาอนุญาติเครื่องใช้ Geolocation
+                                    </Title>
+                                    <Text>
+                                        {user_application.isGeoActive}
+                                    </Text>
+                                    <View style={styles.signoutform}>
+                                        <Button
+                                            onPress={()=>{
+                                                firebase.auth().signOut().then(()=>{
+                                                    dispatch(signOutApp())
+                                                    setSpinner(false)
+                                                }).catch((error)=>{
+                                                    Toast.show({
+                                                        type: ALERT_TYPE.DANGER,
+                                                        title: 'Error',
+                                                        textBody: error,
+                                                    })
+                                                    setSpinner(false)
+                                                })
+                                            }}
+                                            mode="contained"
+                                            style={{marginTop: 100, marginBottom: 20}}
+                                            contentStyle={{
+                                                backgroundColor: "red",
+                                                height: 50,
+                                                width: 300
+                                            }}
+                                        >
+                                            Logout
+                                        </Button> 
+                                    </View>
+                                </View>
+                            }
+                        </>
                     }
                 </>
                 :
@@ -297,6 +420,12 @@ const styles = StyleSheet.create({
         flexWrap: 'wrap', 
         alignItems: 'flex-start',
         flexDirection:'row'
+    },
+    signoutform:{         
+        flexWrap: 'wrap', 
+        alignItems: 'flex-start',
+        flexDirection:'row',
+        bottom: 0,
     },
     spinnerTextStyle: {
         color: '#FFF'
