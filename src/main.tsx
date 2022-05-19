@@ -30,9 +30,10 @@ import MapboxGL from "@rnmapbox/maps"
 import { REACT_APP_MAP_BOX_GL } from "@env"
 import Geolocation from 'react-native-geolocation-service'
 import { RequestedJobForm } from "./components/Tabs/ListTab/RequestedJob/requestedJobForm/requestedJobForm"
-import { MapPicker } from "./components/Tabs/ListTab/RequestedJob/requestedJobForm/mapPicker"
+import { MapPicker } from "./components/Tabs/ListTab/mapPicker"
 import { getApplication } from "./redux/slices/userSlice"
 import { changeGeoActive } from "./redux/slices/userSlice"
+import { CreatedJobForm } from "./components/Tabs/ListTab/CreatedJob/createdJobForm/createdJobForm"
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -110,7 +111,7 @@ export default function Main(){
             if(user_detail.dateJoined){
                 user_detail.dateJoined = moment( new Date(user_detail.dateJoined.seconds*1000)).format('DD/MM/YYYY hh:mm:ss')
             }
-            if(user_data.birthday){
+            if(user_detail.birthday){
                 user_detail = Object.assign(user_detail, {birthday:user_data.birthday ? user_data.birthday : Date.parse(user_data.birthday) || 0})
             }
             user_detail = Object.assign(user_detail, {
@@ -189,7 +190,7 @@ export default function Main(){
                 Toast.show({
                     type: ALERT_TYPE.DANGER,
                     title: 'Error',
-                    textBody: error,
+                    textBody: error.message,
                 })
             })
         } catch (error) {
@@ -197,7 +198,7 @@ export default function Main(){
             Toast.show({
                 type: ALERT_TYPE.DANGER,
                 title: 'Error',
-                textBody: error,
+                textBody: error.message,
             })
         }
     }
@@ -354,6 +355,7 @@ export default function Main(){
                                         <Stack.Screen options={{ headerShown: false }} name="BottomTabScreen" component={BottomTabScreen} />
                                         <Stack.Screen options={{ headerShown: false }} name="Setting" component={Setting} />
                                         <Stack.Screen options={{ headerShown: false }} name="RequestedJobForm" component={RequestedJobForm} />
+                                        <Stack.Screen options={{ headerShown: false }} name="CreatedJobForm" component={CreatedJobForm} />
                                         <Stack.Screen options={{ headerShown: false }} name="MapPicker" component={MapPicker} />
                                     </Stack.Navigator>
                                 </NavigationContainer>

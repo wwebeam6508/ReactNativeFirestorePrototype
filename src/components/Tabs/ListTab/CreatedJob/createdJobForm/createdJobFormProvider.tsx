@@ -15,3 +15,7 @@ export async function getTasksData(jobId) {
     })
     return task
 }
+
+export function updateJobDetailData(jobId, params) {
+    return firebase.firestore().doc(`jobs/${jobId}`).update(params)
+}

@@ -122,7 +122,7 @@ export function RequestedJobFormDetail({route, navigation}) {
                     <View style={{marginTop:20}}>
                         {renderApplicateButton()}
                     </View>
-                    <View style={{marginTop:50,flexDirection:'row',justifyContent: 'space-between'}}>
+                    <View style={{marginTop:50}}>
                         <Text style={{marginEnd:10}}>เริ่มเมื่อ : {jobRequestDetail.job_detail.dateStart}</Text>
                         {
                             jobRequestDetail.job_detail.dateEnd &&
@@ -130,7 +130,7 @@ export function RequestedJobFormDetail({route, navigation}) {
                         }
                     </View>
                     <Text>{ amountTime > 0 && `ระยะเวลาประมาณ ${Math.round(amountTime)} วัน`}</Text>
-                    <View style={{marginTop:40}}>
+                    <View style={{marginTop:40,marginBottom:40}}>
                         <Button
                             onPress={()=>{navigation.dispatch(StackActions.push("MapPicker", {isViewer: true, initPos:jobDetail.position}))}}
                             mode="contained"
@@ -142,10 +142,10 @@ export function RequestedJobFormDetail({route, navigation}) {
                             พิกัดแผนที่
                         </Button>
                     </View>
-                    <Title style={{fontSize:18,marginTop:50}}>
+                    <Title style={{fontSize:18,marginTop:1}}>
                         รายละเอียด
                     </Title>
-                    <Text style={{marginLeft:20,marginRight:20}}>
+                    <Text style={{marginLeft:20,marginRight:20,marginBottom:30}}>
                         { jobDetail.detail }
                     </Text>
                 </View>

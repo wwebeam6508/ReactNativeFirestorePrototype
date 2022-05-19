@@ -6,7 +6,9 @@ import { useSelector } from "react-redux"
 import { getUser } from "../../../../redux/slices/authSlice"
 import { getCreatedJobData } from "./createdJobProvider"
 import Ionicons from '@expo/vector-icons/Ionicons'
+import { StackActions, useNavigation } from "@react-navigation/native"
 export function CreatedJob() {
+    const navigation = useNavigation()
     const user_detail:userDetail = useSelector(getUser) as userDetail
     const [ createdJobs, setCreatedJobs] = useState([])
 
@@ -55,7 +57,7 @@ export function CreatedJob() {
                 {
                     createdJobs && createdJobs.map((job,idx)=>{
                         return(
-                            <Card key={idx} style={{borderColor:"#EEEDE7" ,borderWidth:1}}>
+                            <Card key={idx} style={{borderColor:"#EEEDE7" ,borderWidth:1}} onPress={()=>{navigation.dispatch(StackActions.push("CreatedJobForm", job))}}>
                                 <Card.Content>
                                     <View style={[{flexDirection:'row', justifyContent: 'space-between'}]}>
                                         <Title>{job.title}</Title>

@@ -5,16 +5,14 @@ import { Title, TouchableRipple } from "react-native-paper"
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { StackActions } from "@react-navigation/native"
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs"
-import { RequestedJobFormTask } from "./requestedJobFormTab/requestedJobFormTask"
-import { RequestedJobFormDetail } from "./requestedJobFormTab/requestedJobFormDetail"
-import { getJobDetailData } from "./requestedJobFormProvider"
+import { CreatedJobFormTask } from "./createdJobFormTab/createdJobFormTask"
+import { CreatedJobFormDetail } from "./createdJobFormTab/createdJobFormDetail"
+import { getJobDetailData } from "./createdJobFormProvider"
 import { ALERT_TYPE, Dialog } from "react-native-alert-notification"
 
-export function RequestedJobForm({route, navigation}) {
+export function CreatedJobForm({route, navigation}) {
     const Tab = createMaterialTopTabNavigator()
-    const [ jobRequestDetail, setJobRequestDetail] = useState(route.params)
-    const [ jobDetail, setJobDetail ] = useState({})
-
+    const [ jobCreatedDetail, setJobCreatedDetail] = useState(route.params)
 
 
     return(
@@ -27,11 +25,11 @@ export function RequestedJobForm({route, navigation}) {
                 >
                     <Ionicons style={{textAlign:"center"}} name="arrow-back" size={32} color="black" />
                 </TouchableRipple>
-                <Title style={{marginStart:20,marginTop:20}}>งานที่ร้องขอ</Title>
+                <Title style={{marginStart:20,marginTop:20}}>งานที่สร้าง</Title>
             </View>
             <Tab.Navigator>
-                <Tab.Screen initialParams={{jobRequestDetail: jobRequestDetail}} name="Detail" component={RequestedJobFormDetail} />
-                <Tab.Screen initialParams={{jobRequestDetail: jobRequestDetail}} name="Tasks" component={RequestedJobFormTask} />
+                <Tab.Screen initialParams={{jobCreatedDetail: jobCreatedDetail}} name="Detail" component={CreatedJobFormDetail} />
+                <Tab.Screen initialParams={{jobCreatedDetail: jobCreatedDetail}} name="Tasks" component={CreatedJobFormTask} />
             </Tab.Navigator>
         </View>
     )

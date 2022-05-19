@@ -2,12 +2,12 @@ import { StackActions } from "@react-navigation/native"
 import React, { useEffect, useState } from "react"
 import { StyleSheet, View } from "react-native"
 import { Button, Card, Text, Title } from "react-native-paper"
-import { getTasksData } from "../requestedJobFormProvider"
+import { getTasksData } from "../createdJobFormProvider"
 
-export function RequestedJobFormTask({route, navigation}) {
+export function CreatedJobFormTask({route, navigation}) {
 
 
-    const [ jobRequestDetail, setJobRequestDetail ] = useState(route.params.jobRequestDetail)
+    const [ jobCreatedDetail, setJobCreatedDetail ] = useState(route.params.jobCreatedDetail)
     const [ tasks , setTasks ] = useState([])
     useEffect(()=>{
         async function init() {
@@ -17,7 +17,7 @@ export function RequestedJobFormTask({route, navigation}) {
     },[])
 
     async function getTasks() {
-       const taskdata = await getTasksData(jobRequestDetail.jobId)
+       const taskdata = await getTasksData(jobCreatedDetail.jobId)
        setTasks(taskdata)
     }
     
