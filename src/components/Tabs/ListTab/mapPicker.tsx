@@ -18,7 +18,6 @@ export function MapPicker({route, navigation}) {
     const [ spinner, setSpinner] = useState(false)
 
     async function savePosition() {
-        console.log(route.params.jobId)
         setSpinner(true)
         firestore()
         .collection('jobs')
